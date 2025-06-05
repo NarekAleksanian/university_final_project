@@ -71,78 +71,40 @@ We evaluated **Logistic Regression** and **KNN** using the same preprocessed dat
 
 ---
 
-## 📐 Mathematical Formulation of Logistic Regression
+## ✅ Why Logistic Regression is Better for This Problem
 
-Logistic Regression aims to model the probability that a binary outcome $y \in \{0,1\}$ occurs given input features $\mathbf{x} \in \mathbb{R}^n$. We denote the parameter vector by $oldsymbol{	heta} \in \mathbb{R}^n$ and bias (intercept) by $	heta_0$.
+### 1. **Interpretability**
 
-1. **Linear Combination (Logit)**  
-   For a given feature vector $\mathbf{x}$, compute the linear combination:
-   $$
-   z = 	heta_0 + \sum_{j=1}^{n} 	heta_j x_j = oldsymbol{	heta}^\mathrm{T} \mathbf{x} + 	heta_0.
-   $$
+Logistic Regression provides **feature coefficients**, allowing us to understand:
+- Which features push predictions toward **Success** or **Failure**
+- How **strongly** each feature influences the outcome
 
-2. **Sigmoid (Logistic) Function**  
-   The logistic function $\sigma(z)$ maps $z$ to a probability in $(0,1)$:
-   $$
-   \sigma(z) \;=\; rac{1}{1 + e^{-z}}.
-   $$
-   Therefore, the hypothesis (predicted probability) is:
-   $$
-   h_{oldsymbol{	heta}}(\mathbf{x}) \;=\; \sigma(oldsymbol{	heta}^\mathrm{T} \mathbf{x} + 	heta_0).
-   $$
+This is crucial for **business insight** in startup analysis.
 
-3. **Probability Interpretation**  
-   We interpret:
-   $$
-   P(y=1 \mid \mathbf{x};\, oldsymbol{	heta}) \;=\; h_{oldsymbol{	heta}}(\mathbf{x}), 
-   \quad
-   P(y=0 \mid \mathbf{x};\, oldsymbol{	heta}) \;=\; 1 - h_{oldsymbol{	heta}}(\mathbf{x}).
-   $$
+### 2. **Performance Metrics**
 
-4. **Cost Function (Log-Likelihood / Cross-Entropy)**  
-   For $m$ training examples $\{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^m$, the **log-likelihood** for logistic regression is:
-   $$
-   \ell(oldsymbol{	heta}) \;=\; \sum_{i=1}^{m} \Big[
-     y^{(i)} \log ig(h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig) \;+\; 
-     ig(1 - y^{(i)}ig) \log ig(1 - h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig)
-   \Big].
-   $$
-   We typically minimize the **negative log-likelihood**, known as the **logistic cost** or **cross-entropy loss**:
-   $$
-   J(oldsymbol{	heta}) \;=\; -\,rac{1}{m}
-   \sum_{i=1}^{m} \Big[
-     y^{(i)} \log ig(h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig) \;+\; 
-     ig(1 - y^{(i)}ig) \log ig(1 - h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig)
-   \Big].
-   $$
+Logistic Regression consistently achieves:
+- **Higher Accuracy** (~86%)
+- **Higher Precision** (~90%)
+- **Higher Recall** (~88%)
 
-5. **Gradient Computation**  
-   To minimize $J(oldsymbol{	heta})$ via gradient descent (or one of its variants), we compute the partial derivative with respect to each parameter $	heta_j$:
-   $$
-   rac{\partial J(oldsymbol{	heta})}{\partial 	heta_j}
-   \;=\; rac{1}{m} \sum_{i=1}^{m} ig( h_{oldsymbol{	heta}}(\mathbf{x}^{(i)}) - y^{(i)} ig)\, x_j^{(i)},
-   \quad 
-   	ext{for } j = 0,1,\dots,n,
-   $$
-   noting that $x_0^{(i)} = 1$ for the intercept term.
+These metrics indicate it is more reliable at detecting **true positives** (successful startups) while minimizing false alarms.
 
-6. **Parameter Update Rule**  
-   With a learning rate $lpha$, gradient descent updates each parameter as:
-   $$
-   	heta_j := 	heta_j - lpha \,rac{\partial J(oldsymbol{	heta})}{\partial 	heta_j}, 
-   \quad 
-   orall\, j = 0,1,\dots,n.
-   $$
+### 3. **Scalability & Speed**
 
-7. **Decision Boundary**  
-   After training, we predict class labels by thresholding the probability at $0.5$:
-   $$
-   \hat{y} = 
-   egin{cases}
-     1, & 	ext{if } h_{oldsymbol{	heta}}(\mathbf{x}) \ge 0.5,\
-     0, & 	ext{otherwise.}
-   \end{cases}
-   $$
+KNN becomes **computationally expensive** as:
+- Dataset size increases
+- Feature space expands
+
+Logistic Regression trains and predicts **much faster**, even with over 100 features.
+
+### 4. **Stability in High Dimensions**
+
+High-dimensional data tends to degrade KNN performance due to the **curse of dimensionality**. Logistic Regression handles this well, especially with standardized features.
+
+### 5. **Outlier Robustness**
+
+Logistic Regression is less affected by **outliers and noisy features**, especially when regularization is applied (L2 by default in `sklearn`).
 
 ---
 
