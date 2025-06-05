@@ -71,40 +71,78 @@ We evaluated **Logistic Regression** and **KNN** using the same preprocessed dat
 
 ---
 
-## ✅ Why Logistic Regression is Better for This Problem
+## 📐 Mathematical Formulation of Logistic Regression
 
-### 1. **Interpretability**
+Logistic Regression aims to model the probability that a binary outcome $y \in \{0,1\}$ occurs given input features $\mathbf{x} \in \mathbb{R}^n$. We denote the parameter vector by $oldsymbol{	heta} \in \mathbb{R}^n$ and bias (intercept) by $	heta_0$.
 
-Logistic Regression provides **feature coefficients**, allowing us to understand:
-- Which features push predictions toward **Success** or **Failure**
-- How **strongly** each feature influences the outcome
+1. **Linear Combination (Logit)**  
+   For a given feature vector $\mathbf{x}$, compute the linear combination:
+   $$
+   z = 	heta_0 + \sum_{j=1}^{n} 	heta_j x_j = oldsymbol{	heta}^\mathrm{T} \mathbf{x} + 	heta_0.
+   $$
 
-This is crucial for **business insight** in startup analysis.
+2. **Sigmoid (Logistic) Function**  
+   The logistic function $\sigma(z)$ maps $z$ to a probability in $(0,1)$:
+   $$
+   \sigma(z) \;=\; rac{1}{1 + e^{-z}}.
+   $$
+   Therefore, the hypothesis (predicted probability) is:
+   $$
+   h_{oldsymbol{	heta}}(\mathbf{x}) \;=\; \sigma(oldsymbol{	heta}^\mathrm{T} \mathbf{x} + 	heta_0).
+   $$
 
-### 2. **Performance Metrics**
+3. **Probability Interpretation**  
+   We interpret:
+   $$
+   P(y=1 \mid \mathbf{x};\, oldsymbol{	heta}) \;=\; h_{oldsymbol{	heta}}(\mathbf{x}), 
+   \quad
+   P(y=0 \mid \mathbf{x};\, oldsymbol{	heta}) \;=\; 1 - h_{oldsymbol{	heta}}(\mathbf{x}).
+   $$
 
-Logistic Regression consistently achieves:
-- **Higher Accuracy** (~86%)
-- **Higher Precision** (~90%)
-- **Higher Recall** (~88%)
+4. **Cost Function (Log-Likelihood / Cross-Entropy)**  
+   For $m$ training examples $\{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^m$, the **log-likelihood** for logistic regression is:
+   $$
+   \ell(oldsymbol{	heta}) \;=\; \sum_{i=1}^{m} \Big[
+     y^{(i)} \log ig(h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig) \;+\; 
+     ig(1 - y^{(i)}ig) \log ig(1 - h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig)
+   \Big].
+   $$
+   We typically minimize the **negative log-likelihood**, known as the **logistic cost** or **cross-entropy loss**:
+   $$
+   J(oldsymbol{	heta}) \;=\; -\,rac{1}{m}
+   \sum_{i=1}^{m} \Big[
+     y^{(i)} \log ig(h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig) \;+\; 
+     ig(1 - y^{(i)}ig) \log ig(1 - h_{oldsymbol{	heta}}(\mathbf{x}^{(i)})ig)
+   \Big].
+   $$
 
-These metrics indicate it is more reliable at detecting **true positives** (successful startups) while minimizing false alarms.
+5. **Gradient Computation**  
+   To minimize $J(oldsymbol{	heta})$ via gradient descent (or one of its variants), we compute the partial derivative with respect to each parameter $	heta_j$:
+   $$
+   rac{\partial J(oldsymbol{	heta})}{\partial 	heta_j}
+   \;=\; rac{1}{m} \sum_{i=1}^{m} ig( h_{oldsymbol{	heta}}(\mathbf{x}^{(i)}) - y^{(i)} ig)\, x_j^{(i)},
+   \quad 
+   	ext{for } j = 0,1,\dots,n,
+   $$
+   noting that $x_0^{(i)} = 1$ for the intercept term.
 
-### 3. **Scalability & Speed**
+6. **Parameter Update Rule**  
+   With a learning rate $lpha$, gradient descent updates each parameter as:
+   $$
+   	heta_j := 	heta_j - lpha \,rac{\partial J(oldsymbol{	heta})}{\partial 	heta_j}, 
+   \quad 
+   orall\, j = 0,1,\dots,n.
+   $$
 
-KNN becomes **computationally expensive** as:
-- Dataset size increases
-- Feature space expands
-
-Logistic Regression trains and predicts **much faster**, even with over 100 features.
-
-### 4. **Stability in High Dimensions**
-
-High-dimensional data tends to degrade KNN performance due to the **curse of dimensionality**. Logistic Regression handles this well, especially with standardized features.
-
-### 5. **Outlier Robustness**
-
-Logistic Regression is less affected by **outliers and noisy features**, especially when regularization is applied (L2 by default in `sklearn`).
+7. **Decision Boundary**  
+   After training, we predict class labels by thresholding the probability at $0.5$:
+   $$
+   \hat{y} = 
+   egin{cases}
+     1, & 	ext{if } h_{oldsymbol{	heta}}(\mathbf{x}) \ge 0.5,\
+     0, & 	ext{otherwise.}
+   \end{cases}
+   $$
 
 ---
 
@@ -186,86 +224,3 @@ Run all cells to:
 ## 🔚 Conclusion
 
 After thorough evaluation, **Logistic Regression** outperformed **KNN** in almost every aspect—interpretability, accuracy, efficiency, and scalability. For this binary classification task on structured business data, Logistic Regression is the most appropriate choice.
-
----
-
-## 📐 Mathematical Background of Logistic Regression
-
-Logistic Regression is a **probabilistic linear classifier** used for binary classification problems. It models the probability that an input belongs to a certain class (e.g., Success = 1 or Failure = 0).
-
-### 🔣 1. Model Formula
-
-The Logistic Regression model is based on the **logistic (sigmoid) function**:
-
-\[
-P(Y = 1 \mid \mathbf{x}) = \frac{1}{1 + e^{-z}} = \sigma(z)
-\]
-
-where:
-
-- \( \sigma(z) \): Sigmoid function
-- \( z = \mathbf{w}^T \mathbf{x} + b \): Linear combination of features
-  - \( \mathbf{w} \): weight vector (coefficients)
-  - \( \mathbf{x} \): feature vector (inputs)
-  - \( b \): bias (intercept)
-
-The output \( P(Y = 1 \mid \mathbf{x}) \in (0, 1) \) is the estimated probability of the positive class (Success).
-
----
-
-### 🔄 2. Decision Rule
-
-To classify an observation:
-
-\[
-\hat{y} = 
-\begin{cases}
-1 & \text{if } P(Y = 1 \mid \mathbf{x}) \geq 0.5 \\
-0 & \text{otherwise}
-\end{cases}
-\]
-
----
-
-### 📉 3. Loss Function (Log Loss)
-
-To train the model, we minimize the **log loss** (binary cross-entropy):
-
-\[
-\mathcal{L}(\mathbf{w}, b) = -\frac{1}{n} \sum_{i=1}^{n} \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
-\]
-
-where:
-
-- \( y^{(i)} \): true label (0 or 1)
-- \( \hat{y}^{(i)} = \sigma(\mathbf{w}^T \mathbf{x}^{(i)} + b) \): predicted probability
-- \( n \): number of training samples
-
----
-
-### 🧮 4. Optimization
-
-Parameters \( \mathbf{w} \) and \( b \) are optimized using **gradient descent**:
-
-\[
-\mathbf{w} \leftarrow \mathbf{w} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{w}}, \quad
-b \leftarrow b - \eta \frac{\partial \mathcal{L}}{\partial b}
-\]
-
-where \( \eta \) is the learning rate.
-
----
-
-### 🛡️ 5. Regularization (Optional)
-
-To prevent overfitting, a **regularization term** (L2) can be added:
-
-\[
-\mathcal{L}_{\text{reg}} = \mathcal{L} + \lambda \|\mathbf{w}\|_2^2
-\]
-
-where \( \lambda \) is the regularization strength.
-
----
-
-Logistic Regression is favored in this project for its balance of **simplicity**, **interpretability**, and **strong theoretical foundation**, especially when the dataset has a mix of numerical and categorical features.
