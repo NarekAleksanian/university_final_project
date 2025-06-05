@@ -186,3 +186,86 @@ Run all cells to:
 ## 🔚 Conclusion
 
 After thorough evaluation, **Logistic Regression** outperformed **KNN** in almost every aspect—interpretability, accuracy, efficiency, and scalability. For this binary classification task on structured business data, Logistic Regression is the most appropriate choice.
+
+---
+
+## 📐 Mathematical Background of Logistic Regression
+
+Logistic Regression is a **probabilistic linear classifier** used for binary classification problems. It models the probability that an input belongs to a certain class (e.g., Success = 1 or Failure = 0).
+
+### 🔣 1. Model Formula
+
+The Logistic Regression model is based on the **logistic (sigmoid) function**:
+
+\[
+P(Y = 1 \mid \mathbf{x}) = \frac{1}{1 + e^{-z}} = \sigma(z)
+\]
+
+where:
+
+- \( \sigma(z) \): Sigmoid function
+- \( z = \mathbf{w}^T \mathbf{x} + b \): Linear combination of features
+  - \( \mathbf{w} \): weight vector (coefficients)
+  - \( \mathbf{x} \): feature vector (inputs)
+  - \( b \): bias (intercept)
+
+The output \( P(Y = 1 \mid \mathbf{x}) \in (0, 1) \) is the estimated probability of the positive class (Success).
+
+---
+
+### 🔄 2. Decision Rule
+
+To classify an observation:
+
+\[
+\hat{y} = 
+\begin{cases}
+1 & \text{if } P(Y = 1 \mid \mathbf{x}) \geq 0.5 \\
+0 & \text{otherwise}
+\end{cases}
+\]
+
+---
+
+### 📉 3. Loss Function (Log Loss)
+
+To train the model, we minimize the **log loss** (binary cross-entropy):
+
+\[
+\mathcal{L}(\mathbf{w}, b) = -\frac{1}{n} \sum_{i=1}^{n} \left[ y^{(i)} \log(\hat{y}^{(i)}) + (1 - y^{(i)}) \log(1 - \hat{y}^{(i)}) \right]
+\]
+
+where:
+
+- \( y^{(i)} \): true label (0 or 1)
+- \( \hat{y}^{(i)} = \sigma(\mathbf{w}^T \mathbf{x}^{(i)} + b) \): predicted probability
+- \( n \): number of training samples
+
+---
+
+### 🧮 4. Optimization
+
+Parameters \( \mathbf{w} \) and \( b \) are optimized using **gradient descent**:
+
+\[
+\mathbf{w} \leftarrow \mathbf{w} - \eta \frac{\partial \mathcal{L}}{\partial \mathbf{w}}, \quad
+b \leftarrow b - \eta \frac{\partial \mathcal{L}}{\partial b}
+\]
+
+where \( \eta \) is the learning rate.
+
+---
+
+### 🛡️ 5. Regularization (Optional)
+
+To prevent overfitting, a **regularization term** (L2) can be added:
+
+\[
+\mathcal{L}_{\text{reg}} = \mathcal{L} + \lambda \|\mathbf{w}\|_2^2
+\]
+
+where \( \lambda \) is the regularization strength.
+
+---
+
+Logistic Regression is favored in this project for its balance of **simplicity**, **interpretability**, and **strong theoretical foundation**, especially when the dataset has a mix of numerical and categorical features.
